@@ -15,7 +15,7 @@ class SalChartMap : BaseSalChart {
     private var leftRect = RectF(0f, 0f, 600f, 600f)
     private var rightRect = RectF(800f, 0f, 1000f, 600f)
     private val paintBackground = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG.or(Paint.FILTER_BITMAP_FLAG))
     private val framePaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var cacheBitmap: Bitmap? = null
     private var initialX = 0f
@@ -25,8 +25,12 @@ class SalChartMap : BaseSalChart {
     init {
         paintBackground.color = ContextCompat.getColor(context, R.color.textColor1)
         paintBackground.strokeWidth = .1f
-        paint.color = ContextCompat.getColor(context, R.color.red)
+
+        paint.color = ContextCompat.getColor(context, R.color.textColor1)
         paint.strokeWidth = .1f
+        val transparentDark = ContextCompat.getColor(context, R.color.transparent_dark_2)
+        paint.shader = LinearGradient(0f, 0f, 0f, 0f, transparentDark, transparentDark, Shader.TileMode.CLAMP)
+
         framePaint.color = ContextCompat.getColor(context, R.color.transparent_dark)
         framePaint.strokeWidth = .1f
 

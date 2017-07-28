@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import org.iskopasi.salchart.databinding.ActivityMainBinding
 import org.iskopasi.salchart.databinding.MoneyListitemBinding
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -58,11 +59,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun generateChartData(): List<MoneyData> {
-        val data = ArrayList<MoneyData>()
 
+        val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
         val random = Random(System.currentTimeMillis())
-        for (i in 0..200)
-            data.add(MoneyData("12.32.1222", random.nextFloat() * 100))
+        val data = (0..200).map { MoneyData(sdf.format(System.currentTimeMillis()), Math.round(it + random.nextFloat() * 100).toFloat()) }
 
         return data
     }
