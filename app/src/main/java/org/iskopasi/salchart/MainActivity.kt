@@ -51,6 +51,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun displayData() {
         val data = generateChartData()
         binding.salchartMap.data = data
+        binding.salchartMain.data = data
+        binding.salchartMap.mainView = binding.salchartMain
         adapter.dataList.clear()
         adapter.dataList.addAll(data)
     }

@@ -5,30 +5,22 @@ import android.graphics.*
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.View
 
 
 /**
  * Created by cora32 on 25.07.2017.
  */
-class SalChartMap : View {
+class SalChartMap : BaseSalChart {
     private val frameWidth = 200f
     private var leftRect = RectF(0f, 0f, 600f, 600f)
     private var rightRect = RectF(800f, 0f, 1000f, 600f)
-    var data: List<MoneyData>? = null
-        set(value) {
-            field = value
-            max = data?.maxBy { it.value }?.value!!
-            invalidate()
-        }
-    private var max = 1f
     private val paintBackground = Paint(Paint.ANTI_ALIAS_FLAG)
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val framePaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private var xFactor = 1f
-    private var yFactor = 1f
-    private val path = Path()
     private var cacheBitmap: Bitmap? = null
+    private var initialX = 0f
+    private var currentLeftRectRightConstraintX = 0f
+    private var currentRightRectLeftConstraintX = 0f
 
     init {
         paintBackground.color = ContextCompat.getColor(context, R.color.textColor1)
@@ -48,8 +40,8 @@ class SalChartMap : View {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        if (data != null && data!!.size > 1)
-            xFactor = measuredWidth / (data!!.size - 1).toFloat()
+        if (data.size > 1)
+            xFactor = measuredWidth / (data.size - 1).toFloat()
         yFactor = measuredHeight / max
 
         rightRect.right = measuredWidth.toFloat()
@@ -70,6 +62,7 @@ class SalChartMap : View {
             val bm = getDrawingCache(true)
             cacheBitmap?.recycle()
             cacheBitmap = bm.copy(bm.config, false)
+            calculateMainView()
         } else {
             canvas.drawBitmap(cacheBitmap, 0f, 0f, null)
         }
@@ -82,11 +75,11 @@ class SalChartMap : View {
     }
 
     private fun drawChart(canvas: Canvas) {
-        if (data == null || data?.size == 0)
+        if (data.isEmpty())
             return
 
-        data?.get(0)?.value?.let { path.moveTo(0f, measuredHeight.toFloat()) }
-        data?.forEachIndexed { index, i ->
+        data[0].value.let { path.moveTo(0f, measuredHeight.toFloat()) }
+        data.forEachIndexed { index, i ->
             val x = index.toFloat() * xFactor
             val y = measuredHeight.toFloat() - i.value * yFactor
             path.lineTo(x, y)
@@ -103,9 +96,6 @@ class SalChartMap : View {
             canvas.drawLine(0f, i.toFloat(), measuredWidth.toFloat(), i.toFloat(), paintBackground)
     }
 
-    var initialX = 0f
-    var currentLeftRectRightConstraintX = 0f
-    var currentRightRectLeftConstraintX = 0f
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -120,6 +110,7 @@ class SalChartMap : View {
                 currentRightRectLeftConstraintX = rightRect.left
 
                 invalidate()
+                calculateMainView()
             }
             MotionEvent.ACTION_MOVE -> {
                 val deltaX = initialX - event.rawX
@@ -130,10 +121,21 @@ class SalChartMap : View {
                 checkFrameConstraints()
 
                 invalidate()
+                calculateMainView()
             }
         }
 
         return true
+    }
+
+    private fun calculateMainView() {
+        var leftIndex = (leftRect.right / xFactor).toInt()
+        var rightIndex = (rightRect.left / xFactor).toInt()
+
+        if (leftIndex < 0) leftIndex = 0
+        if (rightIndex >= data.size) rightIndex = data.size - 1
+
+        mainView.setFrameIndexes(leftIndex, rightIndex)
     }
 
     private fun checkFrameConstraints() {
@@ -145,4 +147,6 @@ class SalChartMap : View {
             leftRect.right = measuredWidth - frameWidth
         }
     }
+
+    lateinit var mainView: SalChartMain
 }
