@@ -1,7 +1,9 @@
 package org.iskopasi.salchart.room
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
+import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 
 /**
@@ -10,8 +12,11 @@ import android.arch.persistence.room.Query
 @Dao
 interface MoneyDao {
     @Query("SELECT * FROM " + AppDatabase.MONEY_TABLE)
-    fun getAll(): List<MoneyData>
+    fun getAll(): LiveData<List<MoneyData>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg users: MoneyData)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(translations: List<MoneyData>)
 }

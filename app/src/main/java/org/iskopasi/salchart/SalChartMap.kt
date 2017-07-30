@@ -55,6 +55,9 @@ class SalChartMap : BaseSalChart {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        if (data.isEmpty())
+            return
+
         getDrawingCache(true)
         canvas.drawColor(Color.WHITE)
 
@@ -79,9 +82,6 @@ class SalChartMap : BaseSalChart {
     }
 
     private fun drawChart(canvas: Canvas) {
-        if (data.isEmpty())
-            return
-
         data[0].value.let { path.moveTo(0f, measuredHeight.toFloat()) }
         data.forEachIndexed { index, i ->
             val x = index.toFloat() * xFactor

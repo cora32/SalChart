@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
+import android.util.Log
 
 /**
  * Created by cora32 on 25.07.2017.
@@ -42,6 +43,9 @@ class SalChartMain : BaseSalChart {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        if (data.isEmpty())
+            return
+
         canvas.drawColor(Color.WHITE)
         path.reset()
         pathLine.reset()
@@ -58,9 +62,6 @@ class SalChartMain : BaseSalChart {
 
     private val pathLine = Path()
     private fun drawChart(canvas: Canvas) {
-        if (data.isEmpty())
-            return
-
         data[leftIndex].value.let {
             path.moveTo(0f, measuredHeight.toFloat() + 20)
             pathLine.moveTo(0f, measuredHeight.toFloat() + 20)
@@ -88,6 +89,7 @@ class SalChartMain : BaseSalChart {
     }
 
     public override fun setFrameIndexes(leftIndex: Int, rightIndex: Int) {
+        Log.e("setting index", " $leftIndex $rightIndex")
         this.leftIndex = leftIndex
         this.rightIndex = rightIndex
         if (data.size > 1)

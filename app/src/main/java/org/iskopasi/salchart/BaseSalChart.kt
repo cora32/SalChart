@@ -18,7 +18,7 @@ open class BaseSalChart : View {
         set(value) {
             field = value
             max = data.maxBy { it.value }?.value!!
-            invalidate()
+            requestLayout()
         }
 
     constructor(context: Context?) : super(context)

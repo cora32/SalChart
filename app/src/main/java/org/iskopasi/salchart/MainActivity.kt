@@ -1,29 +1,33 @@
 package org.iskopasi.salchart
 
+import android.arch.lifecycle.LifecycleActivity
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.util.SortedList
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
-import android.view.View
 import android.view.ViewGroup
+import org.iskopasi.salchart.dagger.DaggerMainComponent
+import org.iskopasi.salchart.dagger.MainComponent
+import org.iskopasi.salchart.dagger.MainModule
 import org.iskopasi.salchart.databinding.ActivityMainBinding
 import org.iskopasi.salchart.databinding.MoneyListitemBinding
 import org.iskopasi.salchart.room.MoneyData
-import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
-    override fun onClick(p0: View?) {
-        displayData()
+class MainActivity : LifecycleActivity() {
+    companion object {
+        @JvmStatic lateinit var daggerGraph: MainComponent
     }
 
+    private lateinit var model: SalaryViewModel
     val adapter = Adapter(this)
     private lateinit var binding: ActivityMainBinding
 
@@ -34,11 +38,30 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.title = "Salary accountant"
+        daggerGraph = DaggerMainComponent
+                .builder()
+                .mainModule(MainModule(this))
+                .build()
 
-//        binding.root.setOnClickListener(this)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.salchartMap.mainView = binding.salchartMain
+        model = ViewModelProviders.of(this).get(SalaryViewModel::class.java)
+        model.data.observe(this, android.arch.lifecycle.Observer<List<MoneyData>> { model ->
+            Log.e("Observer", "model: " + model)
+
+            if (model == null)
+                return@Observer
+
+            binding.salchartMap.data = model
+            binding.salchartMain.data = model
+            adapter.dataList.clear()
+            adapter.dataList.addAll(model)
+        })
+
+        model.saveData()
+
+        setActionBar(binding.toolbar)
+        actionBar?.title = "Salary accountant"
 
         adapter.setHasStableIds(true)
         binding.rv.layoutManager = LinearLayoutManager(this)
@@ -46,26 +69,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.rv.itemAnimator = null
         binding.rv.adapter = adapter
         binding.rv.addItemDecoration(DividerItemDecoration(this, (binding.rv.layoutManager as LinearLayoutManager).orientation))
-
-        displayData()
-    }
-
-    private fun displayData() {
-        val data = generateChartData()
-        binding.salchartMap.data = data
-        binding.salchartMain.data = data
-        binding.salchartMap.mainView = binding.salchartMain
-        adapter.dataList.clear()
-        adapter.dataList.addAll(data)
-    }
-
-    private fun generateChartData(): List<MoneyData> {
-
-        val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
-        val random = Random(System.currentTimeMillis())
-        val data = (0..200).map { MoneyData(sdf.format(System.currentTimeMillis()), Math.round(it + random.nextFloat() * 100).toFloat()) }
-
-        return data
     }
 
     class Adapter(context: Context) : RecyclerView.Adapter<Adapter.ViewHolder>() {

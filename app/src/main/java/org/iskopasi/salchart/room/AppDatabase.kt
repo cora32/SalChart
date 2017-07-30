@@ -12,5 +12,5 @@ abstract class AppDatabase : RoomDatabase() {
         const val MONEY_TABLE = "MONEY_TABLE"
     }
 
-    abstract fun userDao(): MoneyDao
+    abstract fun moneyDao(): MoneyDao
 }
