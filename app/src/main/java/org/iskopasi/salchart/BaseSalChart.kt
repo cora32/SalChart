@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Path
 import android.util.AttributeSet
 import android.view.View
+import org.iskopasi.salchart.room.MoneyData
 
 /**
  * Created by cora32 on 28.07.2017.

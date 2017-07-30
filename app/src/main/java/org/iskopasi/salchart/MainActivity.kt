@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import org.iskopasi.salchart.databinding.ActivityMainBinding
 import org.iskopasi.salchart.databinding.MoneyListitemBinding
+import org.iskopasi.salchart.room.MoneyData
 import java.text.SimpleDateFormat
 import java.util.*
 
