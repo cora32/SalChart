@@ -113,6 +113,9 @@ class SalChartMap : BaseSalChart {
                 currentLeftRectRightConstraintX = leftRect.right
                 currentRightRectLeftConstraintX = rightRect.left
 
+                if (initialX > leftRect.right && initialX < rightRect.left)
+                    return true
+
                 invalidate()
                 calculateMainView()
             }
@@ -126,6 +129,10 @@ class SalChartMap : BaseSalChart {
 
                 invalidate()
                 calculateMainView()
+            }
+            MotionEvent.ACTION_UP -> {
+                currentLeftRectRightConstraintX = leftRect.right
+                currentRightRectLeftConstraintX = rightRect.left
             }
         }
 
