@@ -20,9 +20,15 @@ class SalaryRepository {
     fun getData() = db.getData()
 
     private fun generateChartData(): List<MoneyData> {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_MONTH, -100)
         val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
         val random = Random(System.currentTimeMillis())
-        val data = (0..200).map { MoneyData(it.toLong(), sdf.format(System.currentTimeMillis()), Math.round(it + random.nextFloat() * 100).toFloat()) }
+        val data = (0..200).map {
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+            MoneyData(it.toLong(), sdf.format(calendar.timeInMillis), Math.round(it + random.nextFloat() * 100) - (if (it % 5 == 0) 100 else 0).toFloat())
+        }
+                .reversed()
 
         return data
     }

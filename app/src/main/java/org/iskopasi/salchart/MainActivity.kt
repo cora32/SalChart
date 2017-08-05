@@ -61,7 +61,7 @@ class MainActivity : LifecycleActivity() {
         model.saveData()
 
         setActionBar(binding.toolbar)
-        actionBar?.title = "Salary accountant"
+        actionBar?.title = "Salary chart"
 
         adapter.setHasStableIds(true)
         binding.rv.layoutManager = LinearLayoutManager(this)
@@ -80,6 +80,10 @@ class MainActivity : LifecycleActivity() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.bind(dataList.get(position))
+        }
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
         }
 
         val dataList: SortedList<MoneyData> = SortedList(MoneyData::class.java, object : SortedList.Callback<MoneyData>() {
