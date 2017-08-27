@@ -15,12 +15,10 @@ import android.view.Menu
 import android.view.ViewGroup
 import org.iskopasi.salchart.dagger.DaggerMainComponent
 import org.iskopasi.salchart.dagger.MainComponent
-import org.iskopasi.salchart.dagger.MainModule
 import org.iskopasi.salchart.databinding.ActivityMainBinding
 import org.iskopasi.salchart.databinding.MoneyListitemBinding
 import org.iskopasi.salchart.room.MoneyData
 import java.util.*
-
 
 class MainActivity : LifecycleActivity() {
     companion object {
@@ -28,7 +26,7 @@ class MainActivity : LifecycleActivity() {
     }
 
     private lateinit var model: SalaryViewModel
-    val adapter = Adapter(this)
+    private val adapter = Adapter(this)
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -40,7 +38,6 @@ class MainActivity : LifecycleActivity() {
         super.onCreate(savedInstanceState)
         daggerGraph = DaggerMainComponent
                 .builder()
-                .mainModule(MainModule(this))
                 .build()
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -72,7 +69,7 @@ class MainActivity : LifecycleActivity() {
     }
 
     class Adapter(context: Context) : RecyclerView.Adapter<Adapter.ViewHolder>() {
-        val context by lazy { context }
+        private val context by lazy { context }
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder =
                 ViewHolder(MoneyListitemBinding.inflate(LayoutInflater.from(context), parent, false))
 
@@ -114,7 +111,7 @@ class MainActivity : LifecycleActivity() {
 
         })
 
-        class ViewHolder(val binding: MoneyListitemBinding) : RecyclerView.ViewHolder(binding.root) {
+        class ViewHolder(private val binding: MoneyListitemBinding) : RecyclerView.ViewHolder(binding.root) {
             fun bind(model: MoneyData) {
                 binding.model = model
             }
