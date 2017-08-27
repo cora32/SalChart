@@ -2,7 +2,9 @@ package org.iskopasi.salchart
 
 import android.arch.lifecycle.LifecycleActivity
 import android.arch.lifecycle.ViewModelProviders
+import android.content.ComponentName
 import android.content.Context
+import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.util.SortedList
@@ -17,8 +19,10 @@ import org.iskopasi.salchart.dagger.DaggerMainComponent
 import org.iskopasi.salchart.dagger.MainComponent
 import org.iskopasi.salchart.databinding.ActivityMainBinding
 import org.iskopasi.salchart.databinding.MoneyListitemBinding
+import org.iskopasi.salchart.receivers.SMSReceiver
 import org.iskopasi.salchart.room.MoneyData
 import java.util.*
+
 
 class MainActivity : LifecycleActivity() {
     companion object {
@@ -46,8 +50,7 @@ class MainActivity : LifecycleActivity() {
         model.data.observe(this, android.arch.lifecycle.Observer<List<MoneyData>> { model ->
             Log.e("Observer", "model: " + model)
 
-            if (model == null)
-                return@Observer
+            if (model == null) return@Observer
 
             binding.salchartMap.data = model
             binding.salchartMain.data = model
@@ -66,6 +69,17 @@ class MainActivity : LifecycleActivity() {
         binding.rv.itemAnimator = null
         binding.rv.adapter = adapter
         binding.rv.addItemDecoration(DividerItemDecoration(this, (binding.rv.layoutManager as LinearLayoutManager).orientation))
+
+        enableBroadcastReceiver()
+    }
+
+    private fun enableBroadcastReceiver() {
+        val receiver = ComponentName(this, SMSReceiver::class.java)
+        val pm = this.packageManager
+
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP)
     }
 
     class Adapter(context: Context) : RecyclerView.Adapter<Adapter.ViewHolder>() {
