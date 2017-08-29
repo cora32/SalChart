@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">SalChart</string>
+    <string name="app_name" translatable="false">SalChart</string>
+    <string name="settings">Settings</string>
 </resources>

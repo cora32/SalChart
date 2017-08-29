@@ -1,9 +1,9 @@
 package org.iskopasi.salchart
 
-import android.arch.lifecycle.LifecycleActivity
 import android.arch.lifecycle.ViewModelProviders
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
+import android.view.MenuItem
 import android.view.ViewGroup
 import org.iskopasi.salchart.dagger.DaggerMainComponent
 import org.iskopasi.salchart.dagger.MainComponent
@@ -24,7 +25,8 @@ import org.iskopasi.salchart.room.MoneyData
 import java.util.*
 
 
-class MainActivity : LifecycleActivity() {
+class MainActivity : BaseActivity() {
+
     companion object {
         @JvmStatic lateinit var daggerGraph: MainComponent
     }
@@ -32,6 +34,16 @@ class MainActivity : LifecycleActivity() {
     private lateinit var model: SalaryViewModel
     private val adapter = Adapter(this)
     private lateinit var binding: ActivityMainBinding
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.settings -> {
+                startActivity(Intent(this, SettingsActivity::class.java))
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar, menu)
@@ -60,8 +72,8 @@ class MainActivity : LifecycleActivity() {
 
         model.saveData()
 
-        setActionBar(binding.toolbar)
-        actionBar?.title = "Salary chart"
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.title = "Salary chart"
 
         adapter.setHasStableIds(true)
         binding.rv.layoutManager = LinearLayoutManager(this)
