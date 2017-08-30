@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name" translatable="false">SalChart</string>
     <string name="settings">Settings</string>
+    <string name="current_balance">"Balance: "</string>
+    <string name="currency_settings_arrow" translatable="false">Change current currency sign.</string>
+    <string name="currency">Currency sign:</string>
+    <string name="dollar_sign" translatable="false">$</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

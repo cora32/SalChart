@@ -11,7 +11,6 @@ import android.support.v7.util.SortedList
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -26,7 +25,6 @@ import java.util.*
 
 
 class MainActivity : BaseActivity() {
-
     companion object {
         @JvmStatic lateinit var daggerGraph: MainComponent
     }
@@ -60,20 +58,21 @@ class MainActivity : BaseActivity() {
         binding.salchartMap.mainView = binding.salchartMain
         model = ViewModelProviders.of(this).get(SalaryViewModel::class.java)
         model.data.observe(this, android.arch.lifecycle.Observer<List<MoneyData>> { model ->
-            Log.e("Observer", "model: " + model)
-
             if (model == null) return@Observer
 
             binding.salchartMap.data = model
             binding.salchartMain.data = model
             adapter.dataList.clear()
             adapter.dataList.addAll(model)
+
+            supportActionBar?.title = getString(R.string.current_balance) +
+                    (if (model.isNotEmpty()) model.last().value.toString() else "0") + "$"
         })
 
         model.saveData()
 
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.title = "Salary chart"
+        supportActionBar?.title = "--"
 
         adapter.setHasStableIds(true)
         binding.rv.layoutManager = LinearLayoutManager(this)
@@ -131,7 +130,7 @@ class MainActivity : BaseActivity() {
             }
 
             override fun compare(a: MoneyData?, b: MoneyData?): Int =
-                    Comparator<MoneyData> { (id), (id2) -> id.compareTo(id2) }.compare(a, b)
+                    Comparator<MoneyData> { (id), (id2) -> id2.compareTo(id) }.compare(a, b)
 
             override fun areItemsTheSame(item1: MoneyData?, item2: MoneyData?): Boolean = item1?.equals(item2) as Boolean
 

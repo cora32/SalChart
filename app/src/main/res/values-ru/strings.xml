@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings">Настройки</string>
+    <string name="current_balance">"Баланс: "</string>
+    <string name="currency">Валюта</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Отмена</string>
 </resources>

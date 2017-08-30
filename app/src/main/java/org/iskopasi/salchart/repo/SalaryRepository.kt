@@ -29,7 +29,6 @@ class SalaryRepository @Inject constructor() {
             calendar.add(Calendar.DAY_OF_MONTH, 1)
             MoneyData(it.toLong(), sdf.format(calendar.timeInMillis), Math.round(it + random.nextFloat() * 100) - (if (it % 5 == 0) 100 else 0).toFloat())
         }
-                .reversed()
     }
 
     fun saveData() = db.saveData(generateChartData())
