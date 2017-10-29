@@ -1,6 +1,7 @@
 package org.iskopasi.salchart
 
 import org.iskopasi.salchart.room.MoneyData
+import org.iskopasi.salchart.room.RegexpData
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,4 +25,6 @@ class SalaryDB @Inject constructor() {
     fun saveData(data: List<MoneyData>) {
         App.getDB().moneyDao().insertAll(data)
     }
+
+    fun getRegexpList(): List<RegexpData> = App.getDB().regexpDao().getAll()
 }

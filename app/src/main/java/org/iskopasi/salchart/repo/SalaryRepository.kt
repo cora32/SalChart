@@ -1,6 +1,7 @@
 package org.iskopasi.salchart
 
 import org.iskopasi.salchart.room.MoneyData
+import org.iskopasi.salchart.room.RegexpData
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -32,4 +33,5 @@ class SalaryRepository @Inject constructor() {
     }
 
     fun saveData() = db.saveData(generateChartData())
+    fun getRegexpList(): List<RegexpData> = db.getRegexpList()
 }

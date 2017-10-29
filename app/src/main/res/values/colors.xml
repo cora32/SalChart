@@ -11,5 +11,6 @@
     <color name="icon_tint">#595959</color>
     <color name="textColor1">#262626</color>
     <color name="textColor2">#545454</color>
+    <color name="textColor3">#9f9f9f</color>
     <color name="white">#ffffff</color>
 </resources>

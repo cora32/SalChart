@@ -5,4 +5,5 @@ package org.iskopasi.salchart.utils
  */
 object Consts {
     val CURRENCY_KEY = "CURRENCY_KEY"
+    val READ_SMS = "READ_SMS"
 }

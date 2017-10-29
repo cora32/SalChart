@@ -7,4 +7,10 @@
     <string name="dollar_sign" translatable="false">$</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="read_sms">Read SMS</string>
+    <string name="no_regexp">There is no regular expressions currently.</string>
+    <string name="add">Add</string>
+    <string name="your_example">Enter sms sample:</string>
+    <string name="left_constraint">Left constraint text</string>
+    <string name="right_constraint">Right constraint text</string>
 </resources>
