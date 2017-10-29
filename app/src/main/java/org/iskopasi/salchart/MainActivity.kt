@@ -1,9 +1,8 @@
 package org.iskopasi.salchart
 
+import android.Manifest
 import android.arch.lifecycle.ViewModelProviders
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -22,6 +21,12 @@ import org.iskopasi.salchart.databinding.MoneyListitemBinding
 import org.iskopasi.salchart.receivers.SMSReceiver
 import org.iskopasi.salchart.room.MoneyData
 import java.util.*
+import android.net.Uri
+import android.support.v4.app.ActivityCompat
+import android.util.Log
+import android.content.IntentFilter
+
+
 
 
 class MainActivity : BaseActivity() {
@@ -69,6 +74,8 @@ class MainActivity : BaseActivity() {
                     (if (model.isNotEmpty()) model.last().value.toString() else "0") + "$"
         })
 
+//        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECEIVE_SMS), 2)
+
         model.saveData()
 
         setSupportActionBar(binding.toolbar)
@@ -81,7 +88,26 @@ class MainActivity : BaseActivity() {
         binding.rv.adapter = adapter
         binding.rv.addItemDecoration(DividerItemDecoration(this, (binding.rv.layoutManager as LinearLayoutManager).orientation))
 
+        val filter = IntentFilter()
+        filter.addAction("android.provider.Telephony.SMS_RECEIVED")
+        val receiver = SMSReceiver()
+        registerReceiver(receiver, filter)
         enableBroadcastReceiver()
+
+//        val intent = Intent("android.intent.action.MAIN")
+//        intent.component = ComponentName("com.android.mms", "com.android.mms.ui.ConversationList")
+//        startActivity(intent)
+//        val values = ContentValues()
+//        values.put("address", "SENDER")
+//        values.put("body", "foo bar")
+//        contentResolver.insert(Uri.parse("content://sms/inbox"), values)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 2) {
+            // YES!!
+        }
     }
 
     private fun enableBroadcastReceiver() {
