@@ -11,6 +11,10 @@
     <string name="no_regexp">There is no regular expressions currently.</string>
     <string name="add">Add</string>
     <string name="your_example">Enter sms sample:</string>
-    <string name="left_constraint">Left constraint text</string>
-    <string name="right_constraint">Right constraint text</string>
+    <string name="left_constraint">Start from:</string>
+    <string name="right_constraint">Finish at:</string>
+    <string name="sms_hint">Allow reading of incoming SMS to parse new values for salary chart</string>
+    <string name="result">Result:</string>
+    <string name="regexp_result">Regular expression:</string>
+    <string name="add_new_regexp">New regexp</string>
 </resources>

@@ -1,11 +1,8 @@
 package org.iskopasi.salchart
 
 import android.arch.lifecycle.ViewModelProviders
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.util.SortedList
@@ -17,17 +14,20 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import org.iskopasi.salchart.dagger.DaggerMainComponent
-import org.iskopasi.salchart.dagger.MainComponent
 import org.iskopasi.salchart.databinding.ActivityMainBinding
 import org.iskopasi.salchart.databinding.MoneyListitemBinding
-import org.iskopasi.salchart.receivers.SMSReceiver
 import org.iskopasi.salchart.room.MoneyData
 import java.util.*
 
 
 class MainActivity : BaseActivity() {
     companion object {
-        @JvmStatic lateinit var daggerGraph: MainComponent
+        @JvmStatic
+        val daggerGraph by lazy {
+            DaggerMainComponent
+                    .builder()
+                    .build()
+        }
     }
 
     private lateinit var model: SalaryViewModel
@@ -51,9 +51,6 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        daggerGraph = DaggerMainComponent
-                .builder()
-                .build()
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.salchartMap.mainView = binding.salchartMain
@@ -70,8 +67,6 @@ class MainActivity : BaseActivity() {
                     (if (model.isNotEmpty()) model.last().value.toString() else "0") + "$"
         })
 
-//        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECEIVE_SMS), 2)
-
         model.saveData()
 
         setSupportActionBar(binding.toolbar)
@@ -83,28 +78,6 @@ class MainActivity : BaseActivity() {
         binding.rv.itemAnimator = null
         binding.rv.adapter = adapter
         binding.rv.addItemDecoration(DividerItemDecoration(this, (binding.rv.layoutManager as LinearLayoutManager).orientation))
-
-        val filter = IntentFilter()
-        filter.addAction("android.provider.Telephony.SMS_RECEIVED")
-        val receiver = SMSReceiver()
-        registerReceiver(receiver, filter)
-        enableBroadcastReceiver()
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 2) {
-            // YES!!
-        }
-    }
-
-    private fun enableBroadcastReceiver() {
-        val receiver = ComponentName(this, SMSReceiver::class.java)
-        val pm = this.packageManager
-
-        pm.setComponentEnabledSetting(receiver,
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP)
     }
 
     class Adapter(context: Context) : RecyclerView.Adapter<Adapter.ViewHolder>() {
